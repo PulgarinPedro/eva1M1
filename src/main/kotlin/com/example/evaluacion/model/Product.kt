@@ -1,26 +1,23 @@
 package com.example.evaluacion.model
 
+import java.util.Date
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.Table
-import javax.validation.constraints.NotBlank
 
 @Entity
-@Table(name="Asistente")
-class Asistente {
+@Table(name="product")
+class Product {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Id
         @Column(updatable = false)
         var id: Long? = null
-        @NotBlank
-        var nombres: String? = null
+        var descripcion : String? = null
+        var brand: String? = null
+        var stock: Long? = null
 
-        @NotBlank
-        var email: String? = null
-        var institucion: String? = null
-        var cargo: String? = null
 
 }

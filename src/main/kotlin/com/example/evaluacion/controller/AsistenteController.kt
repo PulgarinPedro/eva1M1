@@ -5,6 +5,7 @@ import com.example.evaluacion.service.AsistenteService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -27,7 +28,7 @@ class AsistenteController {
     }
 
     @PostMapping
-    fun save(@RequestBody asistente: Asistente):Asistente{
+    fun save(@RequestBody @Validated asistente: Asistente):Asistente{
         return asistenteService.save(asistente)
     }
 
