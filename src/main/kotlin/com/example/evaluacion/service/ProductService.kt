@@ -21,7 +21,6 @@ class ProductService {
     }
 
     fun save(product:Product):Product{
-        productRepository.findById(product.id) ?: throw Exception("10 no existe")
         return productRepository.save(product)
 
     }

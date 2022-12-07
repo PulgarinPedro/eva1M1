@@ -1,67 +1,76 @@
 package com.example.evaluacion.service
 
-import com.example.evaluacion.model.Invoice
+
+import com.example.evaluacion.model.Detail
+import com.example.evaluacion.model.Product
+import com.example.evaluacion.repository.DetailRepository
 import com.example.evaluacion.repository.InvoiceRepository
-import com.example.evaluacion.repository.AsistenteRepository
+import com.example.evaluacion.repository.ProductRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.server.ResponseStatusException
-import javax.xml.ws.ResponseWrapper
-import javax.xml.ws.soap.AddressingFeature.Responses
 
 @Service
-class InvoiceService {
-
+class DetailService {
+    @Autowired
+    lateinit var detailRepository: DetailRepository
     @Autowired
     lateinit var invoiceRepository: InvoiceRepository
-
     @Autowired
-    lateinit var asistenteRepository: AsistenteRepository
+    lateinit var productRepository: ProductRepository
 
-    fun list():List<Invoice>{
-        return invoiceRepository.findAll()
+    fun save(details: Detail): Detail {
+        try{
+            val response=detailRepository.save(details)
+            val responseProduct:Product = productRepository.findById(response.productId)
+            responseProduct.apply {
+                stock = stock?.minus(details.quantity!!)
+            }
+            productRepository.save(responseProduct)
+            calculateAndUpdateTotal(response)
+            return response
+        }
+        catch (ex:Exception){
+            throw ResponseStatusException(HttpStatus.NOT_FOUND,ex.message)
+        }
     }
-
-    fun save(invoice:Invoice):Invoice{
-        return invoiceRepository.save(invoice)
-        invoiceRepository.findById(invoice.id)
-            ?: throw Exception("10 no existe")
-
+    fun list ():List<Detail>{
+        return detailRepository.findAll()
+    }
+    fun update(detail:Detail):Detail{
         try {
-            asistenteRepository.findById(invoice.asistenteId)
-                ?: throw Exception("Cliente no existe")
-            return invoiceRepository.save(invoice)
+            detailRepository.findById(detail.id)
+                ?: throw Exception("ID no existe")
+            return  detailRepository.save(detail)
         }
         catch (ex:Exception){
             throw ResponseStatusException(HttpStatus.NOT_FOUND,ex.message)
         }
+
     }
 
-    fun update(invoice: Invoice):Invoice{
+    fun updateQuantity(detail:Detail): Detail {
         try{
-        invoiceRepository.findById(invoice.id)
-            ?: throw Exception("ID no existe")
-        return invoiceRepository.save(invoice)
-        }
-        catch (ex:Exception){
-            throw ResponseStatusException(HttpStatus.NOT_FOUND,ex.message)
-        }
-    }
-
-    fun updateName(invoice:Invoice): Invoice {
-        try{
-            val response = invoiceRepository.findById(invoice.id)
+            val response = detailRepository.findById(detail.id)
                 ?: throw Exception("ID no existe")
             response.apply {
-                total=invoice.total
+                quantity=detail.quantity
             }
-            return invoiceRepository.save(response)
+            return detailRepository.save(response)
         }
         catch (ex:Exception){
             throw ResponseStatusException(HttpStatus.NOT_FOUND,ex.message)
         }
+    }
+
+    fun calculateAndUpdateTotal (detail : Detail){
+        val totalCalculated = detailRepository.sumTotal(detail.invoiceId)
+        val invoiceResponse = invoiceRepository.findById(detail.invoiceId)
+        invoiceResponse.apply {
+            total = totalCalculated
+        }
+        invoiceRepository.save(invoiceResponse)
     }
 
 }

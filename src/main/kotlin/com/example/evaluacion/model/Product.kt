@@ -1,6 +1,5 @@
 package com.example.evaluacion.model
 
-import java.util.Date
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -18,6 +17,7 @@ class Product {
         var descripcion : String? = null
         var brand: String? = null
         var stock: Long? = null
+        var price: Double? = null
 
 
 }
