@@ -2,6 +2,7 @@ package com.example.evaluacion.service
 
 
 import com.example.evaluacion.model.Detail
+import com.example.evaluacion.model.Invoice
 import com.example.evaluacion.model.Product
 import com.example.evaluacion.repository.DetailRepository
 import com.example.evaluacion.repository.InvoiceRepository
@@ -66,11 +67,11 @@ class DetailService {
 
     fun calculateAndUpdateTotal (detail : Detail){
         val totalCalculated = detailRepository.sumTotal(detail.invoiceId)
-        val invoiceResponse = invoiceRepository.findById(detail.invoiceId)
-        invoiceResponse.apply {
+        val invoiceResponse: Invoice? = invoiceRepository.findById(detail.invoiceId)
+        invoiceResponse?.apply {
             total = totalCalculated
         }
-        invoiceRepository.save(invoiceResponse)
+        invoiceRepository.save(invoiceResponse!!)
     }
 
 }

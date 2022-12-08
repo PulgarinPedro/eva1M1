@@ -28,13 +28,10 @@ class InvoiceService {
     }
 
     fun save(invoice:Invoice):Invoice{
-        return invoiceRepository.save(invoice)
-        invoiceRepository.findById(invoice.id)
-            ?: throw Exception("10 no existe")
-
         try {
             asistenteRepository.findById(invoice.asistenteId)
                 ?: throw Exception("Cliente no existe")
+
             return invoiceRepository.save(invoice)
         }
         catch (ex:Exception){
@@ -44,8 +41,7 @@ class InvoiceService {
 
     fun update(invoice: Invoice):Invoice{
         try{
-        invoiceRepository.findById(invoice.id)
-            ?: throw Exception("ID no existe")
+        invoiceRepository.findById(invoice.id) ?: throw Exception("ID no existe")
         return invoiceRepository.save(invoice)
         }
         catch (ex:Exception){

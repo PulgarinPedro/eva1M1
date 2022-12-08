@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -26,6 +28,16 @@ class AsistenteController {
     fun list():List<Asistente>{
         return asistenteService.list()
     }
+    @GetMapping("/{id}")
+    fun listById (@PathVariable ("id") id: Long):ResponseEntity<Asistente>{
+        return ResponseEntity(asistenteService.listById(id), HttpStatus.OK)
+    }
+
+    @DeleteMapping("/delete/{id}")
+    fun delete (@PathVariable("id") id: Long):Boolean?{
+        return asistenteService.delete(id)
+    }
+
 
     @PostMapping
     fun save(@RequestBody @Validated asistente: Asistente):Asistente{
