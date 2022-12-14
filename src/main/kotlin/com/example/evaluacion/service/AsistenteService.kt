@@ -4,9 +4,14 @@ package com.example.evaluacion.service
 import com.example.evaluacion.model.Asistente
 import com.example.evaluacion.repository.AsistenteRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Example
+import org.springframework.data.domain.ExampleMatcher
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+
 
 
 @Service
@@ -15,8 +20,11 @@ class AsistenteService {
     @Autowired
     lateinit var asistenteRepository: AsistenteRepository
 
-    fun list():List<Asistente>{
-        return asistenteRepository.findAll()
+    fun list (pageable: Pageable,asistente: Asistente):Page<Asistente>{
+        val matcher = ExampleMatcher.matching()
+            .withIgnoreNullValues()
+            .withMatcher(("nombres"), ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+        return asistenteRepository.findAll(Example.of(asistente, matcher), pageable)
     }
 
     fun listById (id: Long?): Asistente? {

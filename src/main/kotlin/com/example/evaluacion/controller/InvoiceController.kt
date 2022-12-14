@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 
+
 @RestController
 @RequestMapping("/invoice")
 class InvoiceController {
@@ -38,5 +39,6 @@ class InvoiceController {
     fun updateName (@RequestBody invoice:Invoice):ResponseEntity<Invoice>{
         return ResponseEntity(invoiceService.updateName(invoice), HttpStatus.OK)
     }
+
 
 }

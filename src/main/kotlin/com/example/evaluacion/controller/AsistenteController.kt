@@ -3,6 +3,7 @@ package com.example.evaluacion.controller
 import com.example.evaluacion.model.Asistente
 import com.example.evaluacion.service.AsistenteService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 
+
 @RestController
 @RequestMapping("/asistente")
 class AsistenteController {
@@ -25,8 +27,9 @@ class AsistenteController {
     lateinit var asistenteService: AsistenteService
 
     @GetMapping
-    fun list():List<Asistente>{
-        return asistenteService.list()
+    fun list (asistente: Asistente, pageable: Pageable):ResponseEntity<*>{
+        val response= asistenteService.list(pageable,asistente)
+        return ResponseEntity(response, HttpStatus.OK)
     }
     @GetMapping("/{id}")
     fun listById (@PathVariable ("id") id: Long):ResponseEntity<Asistente>{
