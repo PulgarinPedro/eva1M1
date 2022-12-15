@@ -24,6 +24,7 @@ class AsistenteService {
         val matcher = ExampleMatcher.matching()
             .withIgnoreNullValues()
             .withMatcher(("nombres"), ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+            .withMatcher(("email"), ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
         return asistenteRepository.findAll(Example.of(asistente, matcher), pageable)
     }
 
